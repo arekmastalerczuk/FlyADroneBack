@@ -1,9 +1,13 @@
-export interface SpotEntity {
+export interface SimpleSpotEntity {
     id: string;
-    name: string;
-    description?: string;
     latitude: number;
     longitude: number;
+
+}
+
+export interface SpotEntity extends SimpleSpotEntity {
+    name: string;
+    description?: string;
     image?: string;
     siteUrl?: string;
     facebookUrl?: string;

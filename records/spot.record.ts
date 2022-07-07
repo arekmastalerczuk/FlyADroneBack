@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import {FieldPacket} from 'mysql2';
-import {NewSpotEntity, SpotEntity} from '../types';
+import {NewSpotEntity, SimpleSpotEntity, SpotEntity} from '../types';
 import {ValidationError} from '../utils/errors';
 import {pool} from '../utils/db';
 
@@ -64,10 +64,24 @@ export class SpotRecord implements SpotEntity {
     }
 
     static async getOne(id: string): Promise<SpotRecord | null> {
-        const [results] = await pool.execute('SELECT * FROM `spots` WHERE id = :id', {
+        const [results] = await pool.execute('SELECT * FROM `spots` WHERE `id` = :id', {
             id,
         }) as SpotRecordResults;
 
         return results.length === 0 ? null : new SpotRecord(results[0]);
+    }
+
+    static async getAll(name: string): Promise<SimpleSpotEntity[]> {
+        const [results] = await pool.execute('SELECT * FROM `spots` WHERE `name` LIKE :search', {
+            search: `%${name}%`,
+        }) as SpotRecordResults;
+
+        return results.map((result) => {
+            const {id, latitude, longitude} = result;
+
+            return {
+                id, latitude, longitude,
+            };
+        });
     }
 }
