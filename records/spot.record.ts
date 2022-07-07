@@ -51,7 +51,7 @@ export class SpotRecord implements SpotEntity {
             throw new ValidationError('Nie można zlokalizować miejscówki.');
         }
 
-        this.id = id ?? uuid();
+        this.id = id;
         this.name = name;
         this.description = description;
         this.image = image;
@@ -83,5 +83,15 @@ export class SpotRecord implements SpotEntity {
                 id, latitude, longitude,
             };
         });
+    }
+
+    async insert(): Promise<void> {
+        if (!this.id) {
+            this.id = uuid();
+        } else {
+            throw new Error('Cannot insert something that is already inserted.');
+        }
+
+        await pool.execute('INSERT INTO `spots`(`id`, `name`, `description`, `image`, `latitude`, `longitude`,  `siteUrl`, `facebookUrl`, `youtubeUrl`, `instagramUrl`) VALUES(:id, :name, :description, :image, :latitude, :longitude, :siteUrl, :facebookUrl, :youtubeUrl, :instagramUrl)', this);
     }
 }
