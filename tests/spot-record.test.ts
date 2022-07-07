@@ -1,7 +1,7 @@
 import {SpotRecord} from '../records/spot.record';
 
 const defaultSpotObj = {
-    name: 'Example Name',
+    name: '[TEST] Example Name',
     description: 'This is the best place in city.',
     image: 'example.jpg',
     siteUrl: 'https://google.com/',
@@ -16,7 +16,7 @@ const defaultSpotObj = {
 test('Can build SpotRecord', () => {
     const spot = new SpotRecord(defaultSpotObj);
 
-    expect(spot.name).toEqual('Example Name');
+    expect(spot.name).toEqual('[TEST] Example Name');
     expect(spot.description).toEqual('This is the best place in city.');
     expect(spot.image).toEqual('example.jpg');
     expect(spot.siteUrl).toEqual('https://google.com/');
