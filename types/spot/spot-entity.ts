@@ -10,3 +10,7 @@ export interface SpotEntity {
     youtubeUrl?: string;
     instagramUrl?: string;
 }
+
+export interface NewSpotEntity extends Omit<SpotEntity, 'id'> {
+    id?: string;
+}

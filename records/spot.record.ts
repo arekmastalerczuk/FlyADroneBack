@@ -1,10 +1,10 @@
 import {v4 as uuid} from 'uuid';
-import {SpotEntity} from '../types';
+import {FieldPacket} from 'mysql2';
+import {NewSpotEntity, SpotEntity} from '../types';
 import {ValidationError} from '../utils/errors';
+import {pool} from '../utils/db';
 
-interface NewSpotEntity extends Omit<SpotEntity, 'id'> {
-    id?: string;
-}
+type SpotRecordResults = [SpotEntity[], FieldPacket[]];
 
 export class SpotRecord implements SpotEntity {
     public id: string;
@@ -32,7 +32,6 @@ export class SpotRecord implements SpotEntity {
             // eslint-disable-next-line max-len
             id, name, description, image, latitude, longitude, siteUrl, facebookUrl, youtubeUrl, instagramUrl,
         } = obj;
-
         if (!name || name.length > 100) {
             throw new ValidationError('Nazwa miejscówki nie może być pusta, albo dłuższa niż 100 znaków.');
         }
@@ -44,7 +43,7 @@ export class SpotRecord implements SpotEntity {
         // @TODO check if url is valid
 
         // eslint-disable-next-line max-len
-        if ((siteUrl.length) > 100 || (facebookUrl.length) > 100 || (youtubeUrl.length) > 100 || (instagramUrl.length) > 100) {
+        if ((siteUrl && siteUrl.length) > 100 || (facebookUrl && facebookUrl.length) > 100 || (youtubeUrl && youtubeUrl.length) > 100 || (instagramUrl && instagramUrl.length) > 100) {
             throw new ValidationError('Link do strony www lub social media użytkownika nie może być dłuższy niż 100 znaków.');
         }
 
@@ -62,5 +61,13 @@ export class SpotRecord implements SpotEntity {
         this.facebookUrl = facebookUrl;
         this.youtubeUrl = youtubeUrl;
         this.instagramUrl = instagramUrl;
+    }
+
+    static async getOne(id: string): Promise<SpotRecord | null> {
+        const [results] = await pool.execute('SELECT * FROM `spots` WHERE id = :id', {
+            id,
+        }) as SpotRecordResults;
+
+        return results.length === 0 ? null : new SpotRecord(results[0]);
     }
 }

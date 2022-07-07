@@ -11,6 +11,9 @@ test('SpotRecord returns data from database for one entry.', async () => {
     expect(spot.latitude).toEqual(50.259474);
     expect(spot.longitude).toEqual(19.022254);
     expect(spot.siteUrl).toEqual('https://katowice.eu');
+    expect(spot.facebookUrl).toBeNull();
+    expect(spot.youtubeUrl).toBeNull();
+    expect(spot.instagramUrl).toBeNull();
 });
 
 test('SpotRecord returns null from database for unexisting entry.', async () => {
