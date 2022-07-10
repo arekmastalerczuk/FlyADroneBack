@@ -36,7 +36,7 @@ export class SpotRecord implements SpotEntity {
             throw new ValidationError('Nazwa miejscówki nie może być pusta, albo dłuższa niż 100 znaków.');
         }
 
-        if (description.length > 1000) {
+        if (description && description.length > 1000) {
             throw new ValidationError('Opis miejscówki nie może przekraczać 1000 znaków.');
         }
 
