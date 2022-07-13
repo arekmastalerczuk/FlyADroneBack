@@ -10,6 +10,7 @@ const defaultSpotObj = {
     instagramUrl: 'https://instagram.com/',
     latitude: 50.264279,
     longitude: 19.023651,
+    spotAddress: 'rondo Gen. Jerzego Ziętka, Katowice',
 };
 
 /* eslint-disable no-undef */
@@ -25,6 +26,7 @@ test('Can build SpotRecord', () => {
     expect(spot.instagramUrl).toEqual('https://instagram.com/');
     expect(spot.latitude).toEqual(50.264279);
     expect(spot.longitude).toEqual(19.023651);
+    expect(spot.spotAddress).toEqual('rondo Gen. Jerzego Ziętka, Katowice');
 });
 
 test('Validate spot with no name', () => {
@@ -74,6 +76,13 @@ test('Validate if Instagram url is too long', () => {
         ...defaultSpotObj,
         instagramUrl: 'https://instagram.com/example/something/asdadadsa/asdsasdssad/adsdasdsadsasdsadasdadsadsadasdasdasdad.html',
     })).toThrow('Link do strony www lub social media użytkownika nie może być dłuższy niż 100 znaków.');
+});
+
+test('Validate if Spot Address is too long', () => {
+    expect(() => new SpotRecord({
+        ...defaultSpotObj,
+        spotAddress: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus interdum hendrerit ex vitae sodales. Donec id leo ipsum. Phasellus volutpat aliquets. Aeros.',
+    })).toThrow('Adres miejscówki nie może przekraczać 150 znaków.');
 });
 
 /* eslint-enable no-undef */

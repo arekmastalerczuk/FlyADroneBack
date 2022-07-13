@@ -13,6 +13,7 @@ const defaultSpotObj = {
     instagramUrl: 'https://instagram.com/',
     latitude: 50.264279,
     longitude: 19.023651,
+    spotAddress: 'rondo Gen. Jerzego Ziętka, Katowice',
 };
 
 afterAll(async () => {
@@ -64,8 +65,8 @@ test('SpotRecord.getAll returns not all data but only: id, latitude and longitud
     expect((spots[0] as SpotEntity).instagramUrl).toBeUndefined();
 });
 
-test('SpotRecord.getAll returns array of found entries when searching for "ryn".', async () => {
-    const spots = await SpotRecord.getAll('ryn');
+test('SpotRecord.getAll returns array of found entries when searching for "Rynek 1".', async () => {
+    const spots = await SpotRecord.getAll('Rynek 1');
     expect(spots).not.toEqual([]);
     expect(spots[0].id).toBeDefined();
 });
