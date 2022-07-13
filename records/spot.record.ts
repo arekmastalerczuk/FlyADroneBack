@@ -27,10 +27,22 @@ export class SpotRecord implements SpotEntity {
 
     public instagramUrl: string;
 
+    public spotAddress: string;
+
     constructor(obj: NewSpotEntity) {
         const {
             // eslint-disable-next-line max-len
-            id, name, description, image, latitude, longitude, siteUrl, facebookUrl, youtubeUrl, instagramUrl,
+            id,
+            name,
+            description,
+            image,
+            latitude,
+            longitude,
+            siteUrl,
+            facebookUrl,
+            youtubeUrl,
+            instagramUrl,
+            spotAddress,
         } = obj;
         if (!name || name.length > 100) {
             throw new ValidationError('Nazwa miejscówki nie może być pusta, albo dłuższa niż 100 znaków.');
@@ -40,6 +52,9 @@ export class SpotRecord implements SpotEntity {
             throw new ValidationError('Opis miejscówki nie może przekraczać 1000 znaków.');
         }
 
+        if (spotAddress && spotAddress.length > 150) {
+            throw new ValidationError('Adres miejscówki nie może przekraczać 150 znaków.');
+        }
         // @TODO check if url is valid
 
         // eslint-disable-next-line max-len
@@ -61,6 +76,7 @@ export class SpotRecord implements SpotEntity {
         this.facebookUrl = facebookUrl;
         this.youtubeUrl = youtubeUrl;
         this.instagramUrl = instagramUrl;
+        this.spotAddress = spotAddress;
     }
 
     static async getOne(id: string): Promise<SpotRecord | null> {
@@ -72,8 +88,9 @@ export class SpotRecord implements SpotEntity {
     }
 
     static async getAll(name: string): Promise<SimpleSpotEntity[]> {
-        const [results] = await pool.execute('SELECT * FROM `spots` WHERE `name` LIKE :search', {
-            search: `%${name}%`,
+        const filteredName = name.replace(/[^a-zA-Z0-9 ęóąśłżźćń]/g, '');
+        const [results] = await pool.execute('SELECT * FROM `spots` WHERE `spotAddress` LIKE :search', {
+            search: `%${filteredName}%`,
         }) as SpotRecordResults;
 
         return results.map((result) => {
@@ -91,7 +108,11 @@ export class SpotRecord implements SpotEntity {
         } else {
             throw new Error('Cannot insert something that is already inserted.');
         }
+        const filteredSpotAddress = this.spotAddress.replace(/[^a-zA-Z0-9 ęóąśłżźćń]/g, '');
 
-        await pool.execute('INSERT INTO `spots`(`id`, `name`, `description`, `image`, `latitude`, `longitude`,  `siteUrl`, `facebookUrl`, `youtubeUrl`, `instagramUrl`) VALUES(:id, :name, :description, :image, :latitude, :longitude, :siteUrl, :facebookUrl, :youtubeUrl, :instagramUrl)', this);
+        await pool.execute('INSERT INTO `spots`(`id`, `name`, `description`, `image`, `latitude`, `longitude`,  `siteUrl`, `facebookUrl`, `youtubeUrl`, `instagramUrl`, `spotAddress`) VALUES(:id, :name, :description, :image, :latitude, :longitude, :siteUrl, :facebookUrl, :youtubeUrl, :instagramUrl, :spotAddress)', {
+            ...this,
+            spotAddress: filteredSpotAddress,
+        });
     }
 }

@@ -4,8 +4,8 @@ import {SpotRecord} from '../records/spot.record';
 export const spotRouter = Router();
 
 spotRouter
-    .get('/search/:name?', async (req, res) => {
-        const spots = await SpotRecord.getAll(req.params.name ?? '');
+    .get('/search/:spotAddress?', async (req, res) => {
+        const spots = await SpotRecord.getAll(req.params.spotAddress ?? '');
         res.json(spots);
     })
 

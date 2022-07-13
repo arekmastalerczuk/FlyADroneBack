@@ -13,6 +13,7 @@ export interface SpotEntity extends SimpleSpotEntity {
     facebookUrl?: string;
     youtubeUrl?: string;
     instagramUrl?: string;
+    spotAddress: string;
 }
 
 export interface NewSpotEntity extends Omit<SpotEntity, 'id'> {
