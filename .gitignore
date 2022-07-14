@@ -11,7 +11,7 @@
 Icon
 
 # database connection settings #
-utils/db.ts
+config/config.ts
 
 # Thumbnails
 ._*
