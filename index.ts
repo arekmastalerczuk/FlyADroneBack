@@ -1,4 +1,4 @@
-import express, {json} from 'express';
+import express, {json, Router} from 'express';
 import 'express-async-errors';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
@@ -16,7 +16,11 @@ app.use(rateLimit({
     max: 100, // Limit each IP to 100 requests per `window` (here, per 5 minutes)
 }));
 
-app.use('/spot', spotRouter);
+// change for online deployment: app.use('/spot', spotRouter) ==> router.use(('/spot', spotRouter);
+// app.use('/spot', spotRouter);
+const router = Router();
+router.use('/spot', spotRouter);
+app.use('/apidrone', router); // because url: /apidrone is the main app url online for backend
 
 app.use(handleError);
 
