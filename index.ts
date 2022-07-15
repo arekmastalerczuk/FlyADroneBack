@@ -18,10 +18,10 @@ app.use(rateLimit({
 }));
 
 // change for online deployment: app.use('/spot', spotRouter) ==> router.use(('/spot', spotRouter);
-// app.use('/spot', spotRouter);
-const router = Router();
-router.use('/spot', spotRouter);
-app.use('/apidrone', router); // because url: /apidrone is the main app url online for backend
+app.use('/spot', spotRouter);
+// const router = Router();
+// router.use('/spot', spotRouter);
+// app.use('/apidrone', router); // because url: /apidrone is the main app url online for backend
 
 app.use(handleError);
 
